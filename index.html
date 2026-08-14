@@ -294,14 +294,27 @@
             let qText = document.getElementById("quiz-text");
             document.getElementById("quiz-select").value = ""; 
 
-            let hasQuizzes = false;
+            let hasAvailableQuizzes = false;
+            let studentId = document.getElementById("student-id").value.trim().toLowerCase();
+            let currentTime = Date.now();
+            let cooldownTime = 5 * 60 * 60 * 1000; // 5 Hours in milliseconds
+
             if (window.quizDatabase && window.quizDatabase[sub] && window.quizDatabase[sub][`ch_${chNum}`]) {
-                if(Object.keys(window.quizDatabase[sub][`ch_${chNum}`]).length > 0) {
-                    hasQuizzes = true;
+                let quizzes = window.quizDatabase[sub][`ch_${chNum}`];
+                for (let qKey in quizzes) {
+                    let storageKey = `dpp_cooldown_${studentId}_${sub}_${chNum}_${qKey}`;
+                    let lastAttempt = localStorage.getItem(storageKey);
+                    
+                    // अगर छात्र ने इसे 5 घंटे के अंदर बनाया है, तो इसे गिनेंगे नहीं
+                    if (lastAttempt && (currentTime - parseInt(lastAttempt) < cooldownTime)) {
+                        continue;
+                    }
+                    hasAvailableQuizzes = true;
+                    break; 
                 }
             }
 
-            if (hasQuizzes) {
+            if (hasAvailableQuizzes) {
                 qText.innerText = "-- DPP चुनें --";
             } else {
                 qText.innerText = "-- अभी कोई DPP उपलब्ध नहीं है --";
@@ -320,21 +333,34 @@
             document.getElementById("options-title").innerText = "DPP चुनें";
 
             let hasQuizzes = false;
+            let studentId = document.getElementById("student-id").value.trim().toLowerCase();
+            let currentTime = Date.now();
+            let cooldownTime = 5 * 60 * 60 * 1000; // 5 Hours in milliseconds
 
             if (window.quizDatabase && window.quizDatabase[sub] && window.quizDatabase[sub][`ch_${chNum}`]) {
                 let quizzes = window.quizDatabase[sub][`ch_${chNum}`];
                 
-                if(Object.keys(quizzes).length > 0) {
-                    hasQuizzes = true;
-                    for (let qKey in quizzes) {
-                        let qNum = qKey.replace("dpp_", "");
-                        list.innerHTML += `<div class="option-card" onclick="selectQuiz('${qKey}', 'DPP-${qNum}')">DPP-${qNum}</div>`;
+                for (let qKey in quizzes) {
+                    let storageKey = `dpp_cooldown_${studentId}_${sub}_${chNum}_${qKey}`;
+                    let lastAttempt = localStorage.getItem(storageKey);
+
+                    // 5 घंटे (Cooldown) का लॉजिक 
+                    if (lastAttempt) {
+                        if (currentTime - parseInt(lastAttempt) < cooldownTime) {
+                            continue; // 5 घंटे नहीं हुए हैं, इसलिए बटन को हाईड (स्किप) करें
+                        } else {
+                            localStorage.removeItem(storageKey); // 5 घंटे हो गए हैं, स्टोरेज से डाटा हटा दें
+                        }
                     }
+
+                    hasQuizzes = true;
+                    let qNum = qKey.replace("dpp_", "");
+                    list.innerHTML += `<div class="option-card" onclick="selectQuiz('${qKey}', 'DPP-${qNum}')">DPP-${qNum}</div>`;
                 }
             }
 
             if (!hasQuizzes) {
-                list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding: 20px;">अभी इस अध्याय में कोई DPP नहीं डाला गया है।<br><br>कृपया बाद में प्रयास करें।</div>`;
+                list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding: 20px;">अभी इस अध्याय में कोई DPP उपलब्ध नहीं है।<br><br>कृपया बाद में प्रयास करें।</div>`;
             }
 
             document.getElementById("options-modal").classList.remove("hidden");
@@ -473,13 +499,20 @@
             let total = currentQuestions.length;
             let percent = Math.round((score / total) * 100);
 
-            // गूगल शीट के लिए डाटा इकठ्ठा करना
+            // गूगल शीट और लोकल स्टोरेज के लिए डाटा इकठ्ठा करना
             let studentName = document.getElementById("student-name").value;
-            let studentId = document.getElementById("student-id").value;
+            let studentId = document.getElementById("student-id").value.trim().toLowerCase();
             let subjectCode = document.getElementById("subject-select").value;
             let subjectName = document.getElementById("subject-text").innerText;
+            let chapterNum = document.getElementById("chapter-select").value;
             let chapterName = document.getElementById("chapter-text").innerText;
+            let qKey = document.getElementById("quiz-select").value; // e.g., 'dpp_1'
             let dppName = document.getElementById("quiz-text").innerText;
+
+            // -------- नया लॉजिक: 5 घंटे के लिए लोकल स्टोरेज में सेव करना --------
+            let storageKey = `dpp_cooldown_${studentId}_${subjectCode}_${chapterNum}_${qKey}`;
+            localStorage.setItem(storageKey, Date.now());
+            // --------------------------------------------------------------------
 
             let sheetData = {
                 name: studentName,
@@ -496,7 +529,6 @@
             // =========================================================
             const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxZVqprhQ_Y4pdg0xwRixDZUHavrTVDkdbMlprX6hCsqvAboITOaOVHBZYfCZO1O2yySw/exec'; 
 
-            // keepalive: true का इस्तेमाल किया गया है ताकि टैब बंद होने पर भी डाटा चला जाए
             if(GOOGLE_SHEET_URL) {
                 fetch(GOOGLE_SHEET_URL, {
                     method: 'POST',
