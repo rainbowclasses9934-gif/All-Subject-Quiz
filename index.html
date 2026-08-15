@@ -15,7 +15,7 @@
         .container { width: 100%; max-width: 600px; padding: 15px 15px 20px 15px; margin-top: 0; }
         
         /* 2. मेन कंटेनर (Glass Panel): सेमी-ट्रांसपेरेंट डार्क ब्लू विद हल्का वाइट बॉर्डर */
-        .card { background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7); margin-bottom: 20px; animation: fadeIn 0.4s ease-out; }
+        .card { background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 25px; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7); margin-bottom: 20px; animation: fadeIn 0.4s ease-out; position: relative; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
         .input-group { margin-bottom: 20px; }
@@ -65,7 +65,7 @@
         /* 7. मोडल बैकग्राउंड ओवरले (डार्क) और ग्लास (स्लेट ग्रे) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; z-index: 1000; animation: modalFade 0.3s ease-out; }
         
-        .modal-glass { background: rgba(30, 40, 50, 0.95); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 35px; max-width: 400px; width: 88%; text-align: center; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8); animation: modalScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; }
+        .modal-glass { background: rgba(30, 40, 50, 0.95); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 35px; max-width: 400px; width: 88%; text-align: center; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8); animation: modalScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; position: relative; }
         
         .options-glass { padding: 25px !important; max-height: 80vh; }
         .options-list { overflow-y: auto; max-height: 55vh; text-align: left; padding-right: 8px; margin-bottom: 15px; }
@@ -89,6 +89,28 @@
         /* डायनेमिक लोडिंग स्पिनर के लिए CSS */
         .spinner { width: 45px; height: 45px; border: 4px solid rgba(255, 255, 255, 0.1); border-top-color: #38bdf8; border-radius: 50%; margin: 0 auto 20px auto; animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ========================================================= */
+        /* न्यू अपडेट: RAINBOW CLASSES टॉप सेंटर बैज (एनवेलप स्टाइल) */
+        /* ========================================================= */
+        .card::before, .modal-glass::before {
+            content: "RAINBOW CLASSES";
+            position: absolute;
+            top: -12px; /* कार्ड के ऊपरी बॉर्डर पर आधा बाहर, आधा अंदर */
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a; /* पीछे का डार्क बैकग्राउंड जिससे कार्ड की लाइन न दिखे */
+            color: #38bdf8; /* थीम से मिलता हुआ हल्का नीला रंग */
+            font-size: 0.65rem; /* छोटे अक्षर */
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 4px 14px;
+            border: 1px solid rgba(56, 189, 248, 0.5); /* थिकनेस वाली लाइन चारों ओर */
+            border-radius: 6px; /* कॉर्नर थोड़ा सा मुड़ा हुआ (गोल टाइप का) */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
