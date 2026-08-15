@@ -48,6 +48,9 @@
         .modal-glass p { font-size: 1.05rem; color: #f1f5f9; margin-bottom: 22px; line-height: 1.5; }
         @keyframes modalFade { from { opacity: 0; } to { opacity: 1; } }
         @keyframes modalScale { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        /* डायनेमिक लोडिंग स्पिनर के लिए CSS */
+        .spinner { width: 45px; height: 45px; border: 5px solid rgba(255,255,255,0.2); border-top-color: #38bdf8; border-radius: 50%; margin: 0 auto 15px auto; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -127,6 +130,7 @@
 
     </div>
 
+    <!-- Error/Message Modal -->
     <div id="custom-modal" class="modal-overlay hidden">
         <div class="modal-glass">
             <div class="modal-icon">⚠️</div>
@@ -135,6 +139,7 @@
         </div>
     </div>
 
+    <!-- Options Select Modal -->
     <div id="options-modal" class="modal-overlay hidden">
         <div class="modal-glass options-glass">
             <h3 id="options-title" style="margin-bottom: 15px; color: #fff; font-size: 1.1rem;">चुनें</h3>
@@ -143,13 +148,20 @@
         </div>
     </div>
 
-    <!-- छात्र आईडी वेरिफिकेशन के लिए फाइल -->
+    <!-- Dynamic Loading UI Spinner -->
+    <div id="loading-overlay" class="modal-overlay hidden" style="z-index: 2000;">
+        <div class="modal-glass" style="text-align: center; padding: 40px 30px;">
+            <div class="spinner"></div>
+            <p style="color: #fff; font-size: 1.1rem; margin-bottom: 0;">कृपया प्रतीक्षा करें,<br><span style="font-size:0.9rem; color:#94a3b8;">सवाल सर्वर से लोड हो रहे हैं...</span></p>
+        </div>
+    </div>
+
+    <!-- 100% STATIC ID VERIFICATION (वेबसाइट खुलते ही तुरंत लोड होगा) -->
+    <!-- ध्यान दें: यह फाइल केवल आईडी वेरीफिकेशन के लिए ही प्रयोग होगी -->
     <script src="studentid.js"></script>
-    
-    <!-- सवालों के डेटा के लिए मौजूदा फाइल -->
-    <script src="questions.js"></script>
 
     <script>
+        // Subjects & Chapters List (UI के लिए स्थिर डेटा)
         const subjectsList = {
             1: "भौतिक विज्ञान (Physics)",
             2: "रसायन विज्ञान (Chemistry)",
@@ -168,6 +180,9 @@
             6: ["Indian Civilization and Culture", "Bharat is My Home", "A Pinch of Snuff", "I Have a Dream", "Ideas That Have Helped Mankind", "The Artist", "A Child is Born", "How Free is the Press", "The Earth", "India Through a Traveler's Eyes", "A Marriage Proposal", "Sweetest Love I Do Not Goe", "Song of Myself", "Now the Leaves Are Falling Fast", "Ode to Autumn", "An Epitaph", "The Soldier", "Macavity: The Mystery Cat", "Fire-Hymn", "Snake", "My Grandmother's House"]
         };
 
+        const subPrefixes = { 1: "physics", 2: "chemistry", 3: "mathematics", 4: "biology", 5: "hindi", 6: "english" };
+        const loadedScripts = {}; // जो फाइलें लोड हो चुकी हैं, उनका रिकॉर्ड रखने के लिए
+
         let currentQuestions = [];
         let currentQIndex = 0;
         let userAnswers = [];
@@ -183,20 +198,15 @@
             document.getElementById("custom-modal").classList.add("hidden");
             document.getElementById("options-modal").classList.add("hidden");
 
-            if (!state) {
-                showScreen('login-screen');
-                return;
-            }
+            if (!state) { showScreen('login-screen'); return; }
 
             if (state.modal) document.getElementById("custom-modal").classList.remove("hidden");
             if (state.optionsModal) document.getElementById("options-modal").classList.remove("hidden");
 
             if (state.screen === 'login') {
-                showScreen('login-screen');
-                clearInterval(timerInterval);
+                showScreen('login-screen'); clearInterval(timerInterval);
             } else if (state.screen === 'selection') {
-                showScreen('selection-screen');
-                clearInterval(timerInterval);
+                showScreen('selection-screen'); clearInterval(timerInterval);
             } else if (state.screen === 'quiz') {
                 showScreen('quiz-screen');
             } else if (state.screen === 'result') {
@@ -212,6 +222,9 @@
             document.getElementById(screenId).classList.remove("hidden");
         }
 
+        // ==========================================
+        // आईडी वेरिफिकेशन (STRICTLY FROM studentid.js)
+        // ==========================================
         function verifyStudent() {
             let name = document.getElementById("student-name").value.trim();
             let studentId = document.getElementById("student-id").value.trim(); 
@@ -222,10 +235,14 @@
             let isIdValid = false;
             let enteredIdLower = studentId.toLowerCase(); 
 
+            // यह सुनिश्चित करता है कि वेरिफिकेशन केवल studentid.js के डेटा से हो
             if (window.validStudentIDs) {
                 isIdValid = window.validStudentIDs.some(function(savedId) {
                     return savedId.toLowerCase() === enteredIdLower;
                 });
+            } else {
+                showModal("आईडी डेटाबेस (studentid.js) नहीं मिला। कृपया एडमिन से संपर्क करें।");
+                return;
             }
 
             if (!isIdValid) {
@@ -264,10 +281,7 @@
 
         function openChapterSelect() {
             let sub = document.getElementById("subject-select").value;
-            if(!sub) {
-                showModal("कृपया पहले विषय चुनें!");
-                return;
-            }
+            if(!sub) { showModal("कृपया पहले विषय चुनें!"); return; }
 
             let list = document.getElementById("options-list");
             list.innerHTML = "";
@@ -283,11 +297,67 @@
             history.pushState({ screen: history.state ? history.state.screen : 'selection', optionsModal: true }, '');
         }
 
+        // ==========================================
+        // DYNAMIC LOADING LOGIC (डायनेमिक फाइल मैपिंग)
+        // ==========================================
+        function getFileName(subjectId, chapterNum) {
+            let prefix = subPrefixes[subjectId];
+            let chNum = parseInt(chapterNum, 10);
+            
+            // यह फॉर्मूला हर 5 चैप्टर पर नई फाइल सेट करेगा: (1-5 = 1), (6-10 = 2), (11-15 = 3) आदि।
+            let fileIndex = Math.ceil(chNum / 5); 
+            
+            return `${prefix}${fileIndex}.js`;
+        }
+
+        function toggleLoading(show) {
+            if(show) document.getElementById("loading-overlay").classList.remove("hidden");
+            else document.getElementById("loading-overlay").classList.add("hidden");
+        }
+
+        function loadQuestionsScript(fileName, callback) {
+            // अगर फाइल पहले ही लोड हो चुकी है, तो तुरंत आगे बढ़ जाएं
+            if (loadedScripts[fileName]) { callback(true); return; }
+
+            toggleLoading(true);
+            let script = document.createElement('script');
+            script.src = fileName;
+            
+            script.onload = function() {
+                loadedScripts[fileName] = true;
+                toggleLoading(false);
+                callback(true);
+            };
+            
+            script.onerror = function() {
+                toggleLoading(false);
+                callback(false);
+            };
+            
+            document.body.appendChild(script);
+        }
+
         function selectChapter(val, text) {
             document.getElementById("chapter-select").value = val;
             document.getElementById("chapter-text").innerText = text;
-            history.back();
-            loadQuizzesCustom();
+            history.back(); // Options Modal बंद करें
+
+            let subjectId = document.getElementById("subject-select").value;
+            let dynamicFileName = getFileName(subjectId, val);
+
+            // सेट ड्रॉपडाउन को रीसेट करें
+            document.getElementById("quiz-select").value = "";
+            document.getElementById("quiz-text").innerText = "लुकअप जारी है...";
+
+            // बैकग्राउंड में .js फाइल लोड करें
+            loadQuestionsScript(dynamicFileName, function(success) {
+                if(success) {
+                    loadQuizzesCustom(); // फाइल लोड होने के बाद सेट खोजें
+                } else {
+                    showModal(`त्रुटि: सवाल फाइल (${dynamicFileName}) लोड नहीं हो सकी।`);
+                    document.getElementById("quiz-text").innerText = "-- त्रुटि --";
+                }
+            });
         }
 
         function loadQuizzesCustom() {
@@ -297,6 +367,7 @@
             document.getElementById("quiz-select").value = ""; 
 
             let hasQuizzes = false;
+            // चेक करें कि डायनेमिक फाइल से जो डेटा आया है उसमें यह सेट मौजूद है या नहीं
             if (window.quizDatabase && window.quizDatabase[sub] && window.quizDatabase[sub][`ch_${chNum}`]) {
                 if(Object.keys(window.quizDatabase[sub][`ch_${chNum}`]).length > 0) {
                     hasQuizzes = true;
@@ -350,11 +421,8 @@
         }
 
         function closeOptionsModal() {
-            if (history.state && history.state.optionsModal) {
-                history.back();
-            } else {
-                document.getElementById("options-modal").classList.add("hidden");
-            }
+            if (history.state && history.state.optionsModal) history.back();
+            else document.getElementById("options-modal").classList.add("hidden");
         }
 
         function showModal(msg) {
@@ -364,13 +432,13 @@
         }
 
         function closeModal() {
-            if (history.state && history.state.modal) {
-                history.back();
-            } else {
-                document.getElementById("custom-modal").classList.add("hidden");
-            }
+            if (history.state && history.state.modal) history.back();
+            else document.getElementById("custom-modal").classList.add("hidden");
         }
 
+        // ==========================================
+        // QUIZ LOGIC (पहले की तरह 100% सुरक्षित)
+        // ==========================================
         function startQuiz() {
             let sub = document.getElementById("subject-select").value;
             let ch = document.getElementById("chapter-select").value;
@@ -449,17 +517,11 @@
         }
 
         function nextQuestion() {
-            if (currentQIndex < currentQuestions.length - 1) {
-                currentQIndex++;
-                loadQuestion();
-            }
+            if (currentQIndex < currentQuestions.length - 1) { currentQIndex++; loadQuestion(); }
         }
 
         function prevQuestion() {
-            if (currentQIndex > 0) {
-                currentQIndex--;
-                loadQuestion();
-            }
+            if (currentQIndex > 0) { currentQIndex--; loadQuestion(); }
         }
 
         function submitQuiz() {
