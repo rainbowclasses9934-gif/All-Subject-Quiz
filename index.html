@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAINBOW CLASSES - DPP Portal</title>
+    <title>RAINBOW CLASSES - SET Portal</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
         input { user-select: auto; }
         body { background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%); color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; background-attachment: fixed; }
         header { width: 100%; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255, 255, 255, 0.15); color: white; text-align: center; padding: 12px 15px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); }
         header h1 { font-size: 1.8rem; letter-spacing: 1px; font-weight: 800; background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        header p { font-size: 1.2rem; font-weight: bold; color: #cbd5e1; margin-top: 2px; }
         .container { width: 100%; max-width: 600px; padding: 20px 15px; margin-top: 10px; }
         .card { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 20px; padding: 25px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4); margin-bottom: 20px; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -55,7 +54,6 @@
 
     <header>
         <h1 id="main-title">RAINBOW CLASSES</h1>
-        <p>DPP</p>
     </header>
 
     <div class="container">
@@ -74,7 +72,7 @@
         </div>
 
         <div id="selection-screen" class="card hidden">
-            <h2 style="margin-bottom: 20px; text-align: center; color: #f8fafc; font-size: 1.3rem;">DPP सेटिंग्स</h2>
+            <h2 style="margin-bottom: 20px; text-align: center; color: #f8fafc; font-size: 1.3rem;">SET सेटिंग्स</h2>
             <div class="input-group">
                 <label>विषय चुनें (Class 12th):</label>
                 <div class="glass-select-box" onclick="openSubjectSelect()">
@@ -92,14 +90,14 @@
                 <input type="hidden" id="chapter-select" value="">
             </div>
             <div class="input-group">
-                <label>DPP चुनें:</label>
+                <label>SET चुनें:</label>
                 <div class="glass-select-box" onclick="openQuizSelect()">
                     <span id="quiz-text">-- पहले अध्याय चुनें --</span>
                     <span class="select-icon">▼</span>
                 </div>
                 <input type="hidden" id="quiz-select" value="">
             </div>
-            <button class="btn" onclick="startQuiz()">Start DPP</button>
+            <button class="btn" onclick="startQuiz()">Start SET</button>
         </div>
 
         <div id="quiz-screen" class="card hidden">
@@ -118,7 +116,7 @@
         </div>
 
         <div id="result-screen" class="card score-card hidden">
-            <h2 style="color: #f8fafc; font-size: 1.5rem;">🎉 DPP समाप्त!</h2>
+            <h2 style="color: #f8fafc; font-size: 1.5rem;">🎉 SET समाप्त!</h2>
             <p id="res-name" style="margin-top: 10px; color: #cbd5e1; font-weight: 600; font-size: 1.1rem;"></p>
             <p id="res-id-display" style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px;"></p>
             <div class="score-badge" id="res-score">0 / 0</div>
@@ -146,6 +144,7 @@
     </div>
 
     <script src="questions.js"></script>
+    <script src="physics.js"></script>
 
     <script>
         const subjectsList = {
@@ -294,30 +293,17 @@
             let qText = document.getElementById("quiz-text");
             document.getElementById("quiz-select").value = ""; 
 
-            let hasAvailableQuizzes = false;
-            let studentId = document.getElementById("student-id").value.trim().toLowerCase();
-            let currentTime = Date.now();
-            let cooldownTime = 5 * 60 * 60 * 1000; // 5 Hours in milliseconds
-
+            let hasQuizzes = false;
             if (window.quizDatabase && window.quizDatabase[sub] && window.quizDatabase[sub][`ch_${chNum}`]) {
-                let quizzes = window.quizDatabase[sub][`ch_${chNum}`];
-                for (let qKey in quizzes) {
-                    let storageKey = `dpp_cooldown_${studentId}_${sub}_${chNum}_${qKey}`;
-                    let lastAttempt = localStorage.getItem(storageKey);
-                    
-                    // अगर छात्र ने इसे 5 घंटे के अंदर बनाया है, तो इसे गिनेंगे नहीं
-                    if (lastAttempt && (currentTime - parseInt(lastAttempt) < cooldownTime)) {
-                        continue;
-                    }
-                    hasAvailableQuizzes = true;
-                    break; 
+                if(Object.keys(window.quizDatabase[sub][`ch_${chNum}`]).length > 0) {
+                    hasQuizzes = true;
                 }
             }
 
-            if (hasAvailableQuizzes) {
-                qText.innerText = "-- DPP चुनें --";
+            if (hasQuizzes) {
+                qText.innerText = "-- SET चुनें --";
             } else {
-                qText.innerText = "-- अभी कोई DPP उपलब्ध नहीं है --";
+                qText.innerText = "-- अभी कोई SET उपलब्ध नहीं है --";
             }
         }
 
@@ -330,37 +316,24 @@
 
             let list = document.getElementById("options-list");
             list.innerHTML = "";
-            document.getElementById("options-title").innerText = "DPP चुनें";
+            document.getElementById("options-title").innerText = "SET चुनें";
 
             let hasQuizzes = false;
-            let studentId = document.getElementById("student-id").value.trim().toLowerCase();
-            let currentTime = Date.now();
-            let cooldownTime = 5 * 60 * 60 * 1000; // 5 Hours in milliseconds
 
             if (window.quizDatabase && window.quizDatabase[sub] && window.quizDatabase[sub][`ch_${chNum}`]) {
                 let quizzes = window.quizDatabase[sub][`ch_${chNum}`];
                 
-                for (let qKey in quizzes) {
-                    let storageKey = `dpp_cooldown_${studentId}_${sub}_${chNum}_${qKey}`;
-                    let lastAttempt = localStorage.getItem(storageKey);
-
-                    // 5 घंटे (Cooldown) का लॉजिक 
-                    if (lastAttempt) {
-                        if (currentTime - parseInt(lastAttempt) < cooldownTime) {
-                            continue; // 5 घंटे नहीं हुए हैं, इसलिए बटन को हाईड (स्किप) करें
-                        } else {
-                            localStorage.removeItem(storageKey); // 5 घंटे हो गए हैं, स्टोरेज से डाटा हटा दें
-                        }
-                    }
-
+                if(Object.keys(quizzes).length > 0) {
                     hasQuizzes = true;
-                    let qNum = qKey.replace("dpp_", "");
-                    list.innerHTML += `<div class="option-card" onclick="selectQuiz('${qKey}', 'DPP-${qNum}')">DPP-${qNum}</div>`;
+                    for (let qKey in quizzes) {
+                        let qNum = qKey.replace("set_", "");
+                        list.innerHTML += `<div class="option-card" onclick="selectQuiz('${qKey}', 'SET-${qNum}')">SET-${qNum}</div>`;
+                    }
                 }
             }
 
             if (!hasQuizzes) {
-                list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding: 20px;">अभी इस अध्याय में कोई DPP उपलब्ध नहीं है।<br><br>कृपया बाद में प्रयास करें।</div>`;
+                list.innerHTML = `<div style="text-align:center; color:#94a3b8; padding: 20px;">अभी इस अध्याय में कोई SET नहीं डाला गया है।<br><br>कृपया बाद में प्रयास करें।</div>`;
             }
 
             document.getElementById("options-modal").classList.remove("hidden");
@@ -402,7 +375,7 @@
 
             if (!sub) { showModal("कृपया विषय चुनें!"); return; }
             if (!ch) { showModal("कृपया अध्याय चुनें!"); return; }
-            if (!qKey) { showModal("कोई DPP चुना नहीं गया है। यदि उपलब्ध नहीं है, तो बाद में प्रयास करें।"); return; }
+            if (!qKey) { showModal("कोई SET चुना नहीं गया है। यदि उपलब्ध नहीं है, तो बाद में प्रयास करें।"); return; }
 
             const chKey = `ch_${ch}`;
 
@@ -417,7 +390,7 @@
                 startOverallTimer();
                 loadQuestion();
             } else {
-                showModal("इस DPP के सवाल अभी जोड़े नहीं गए हैं!");
+                showModal("इस SET के सवाल अभी जोड़े नहीं गए हैं!");
             }
         }
 
@@ -432,7 +405,7 @@
 
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
-                    showModal("समय समाप्त! आपका DPP स्वचालित रूप से सबमिट किया जा रहा है।");
+                    showModal("समय समाप्त! आपका SET स्वचालित रूप से सबमिट किया जा रहा है।");
                     submitQuiz();
                 }
             }, 1000);
@@ -486,9 +459,6 @@
             }
         }
 
-        // ==========================================
-        // SUBMIT QUIZ फंक्शन 
-        // ==========================================
         function submitQuiz() {
             clearInterval(timerInterval);
             let score = 0;
@@ -499,50 +469,11 @@
             let total = currentQuestions.length;
             let percent = Math.round((score / total) * 100);
 
-            // गूगल शीट और लोकल स्टोरेज के लिए डाटा इकठ्ठा करना
-            let studentName = document.getElementById("student-name").value;
-            let studentId = document.getElementById("student-id").value.trim().toLowerCase();
-            let subjectCode = document.getElementById("subject-select").value;
-            let subjectName = document.getElementById("subject-text").innerText;
-            let chapterNum = document.getElementById("chapter-select").value;
-            let chapterName = document.getElementById("chapter-text").innerText;
-            let qKey = document.getElementById("quiz-select").value; // e.g., 'dpp_1'
-            let dppName = document.getElementById("quiz-text").innerText;
-
-            // -------- नया लॉजिक: 5 घंटे के लिए लोकल स्टोरेज में सेव करना --------
-            let storageKey = `dpp_cooldown_${studentId}_${subjectCode}_${chapterNum}_${qKey}`;
-            localStorage.setItem(storageKey, Date.now());
-            // --------------------------------------------------------------------
-
-            let sheetData = {
-                name: studentName,
-                id: studentId,
-                score: `${score} / ${total}`,
-                subjectCode: subjectCode,
-                subjectName: subjectName,
-                chapterName: chapterName,
-                dppName: dppName
-            };
-
-            // =========================================================
-            // आपका GOOGLE APPS SCRIPT का लिंक 
-            // =========================================================
-            const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxZVqprhQ_Y4pdg0xwRixDZUHavrTVDkdbMlprX6hCsqvAboITOaOVHBZYfCZO1O2yySw/exec'; 
-
-            if(GOOGLE_SHEET_URL) {
-                fetch(GOOGLE_SHEET_URL, {
-                    method: 'POST',
-                    keepalive: true, 
-                    body: JSON.stringify(sheetData)
-                }).catch(e => console.log("डेटा भेजने में त्रुटि: ", e));
-            }
-
-            // स्क्रीन पर रिजल्ट दिखाना
             history.replaceState({ screen: 'result' }, '');
             showScreen('result-screen');
 
-            document.getElementById("res-name").innerText = `विद्यार्थी: ${studentName}`;
-            document.getElementById("res-id-display").innerText = `ID: ${studentId}`;
+            document.getElementById("res-name").innerText = `विद्यार्थी: ${document.getElementById("student-name").value}`;
+            document.getElementById("res-id-display").innerText = `ID: ${document.getElementById("student-id").value}`;
             document.getElementById("res-score").innerText = `${score} / ${total}`;
             document.getElementById("res-percent").innerText = `कुल प्राप्तांक: ${percent}%`;
         }
