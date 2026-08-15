@@ -139,34 +139,6 @@ window.quizDatabase[4].ch_1.dpp_1 = [
     correct: 0
   }
 ];
-window.quizDatabase[5].ch_1 = window.quizDatabase[5].ch_1 || {}; 
-window.quizDatabase[5].ch_1.dpp_1 = [
-  {
-    question: "यह प्रश्न उदाहरण के लिए है",
-    options: ["option 1", "option 2", "option 3", "option 4"],
-    correct: 0
-  },
-  {
-    question: "यह प्रश्न उदाहरण के लिए है",
-    options: ["option 1", "option 2", "option 3", "option 4"],
-    correct: 1
-  },
-  {
-    question: "यह प्रश्न उदाहरण के लिए है",
-    options: ["option 1", "option 2", "option 3", "option 4"],
-    correct: 2
-  },
-  {
-    question: "यह प्रश्न उदाहरण के लिए है",
-    options: ["option 1", "option 2", "option 3", "option 4"],
-    correct: 3
-  },
-  {
-    question: "यह प्रश्न उदाहरण के लिए है",
-    options: ["option 1", "option 2", "option 3", "option 4"],
-    correct: 0
-  }
-];
 window.quizDatabase[6].ch_1 = window.quizDatabase[6].ch_1 || {}; 
 window.quizDatabase[6].ch_1.dpp_1 = [
   {
