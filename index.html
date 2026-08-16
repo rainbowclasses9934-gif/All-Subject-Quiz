@@ -12,6 +12,11 @@
         /* 1. बैकग्राउंड: डार्क ब्लू-ग्रे ग्रेडिएंट */
         body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; background-attachment: fixed; }
         
+        /* स्मूथ ट्रांजिशन (डार्क से लाइट मोड के लिए 1.2s स्मूथ इफ़ेक्ट) */
+        body, .card, .modal-glass, .input-group input, .glass-select-box, .option-item, .option-card, .btn {
+            transition: background 1.2s ease, background-color 1.2s ease, color 1.2s ease, border-color 1.2s ease, box-shadow 1.2s ease, transform 0.2s ease;
+        }
+
         .container { width: 100%; max-width: 600px; padding: 15px 15px 20px 15px; margin-top: 0; }
         
         /* 2. मेन कंटेनर (Glass Panel): सेमी-ट्रांसपेरेंट डार्क ब्लू विद हल्का वाइट बॉर्डर */
@@ -22,17 +27,17 @@
         .input-group label { display: block; font-weight: 500; margin-bottom: 10px; color: #ffffff; font-size: 0.95rem; }
         
         /* 3. इनपुट फील्ड्स: पारदर्शी काला */
-        .input-group input { width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; font-size: 1rem; color: #ffffff; outline: none; backdrop-filter: blur(8px); transition: all 0.3s ease; }
+        .input-group input { width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; font-size: 1rem; color: #ffffff; outline: none; backdrop-filter: blur(8px); }
         .input-group input::placeholder { color: rgba(255, 255, 255, 0.6); }
         .input-group input:focus { border-color: #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); background: rgba(0, 0, 0, 0.5); }
         
         /* डार्क ग्लास सेलेक्ट बॉक्स */
-        .glass-select-box { width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; font-size: 1rem; color: #ffffff; cursor: pointer; backdrop-filter: blur(8px); transition: all 0.3s ease; display: flex; justify-content: space-between; align-items: center; }
+        .glass-select-box { width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; font-size: 1rem; color: #ffffff; cursor: pointer; backdrop-filter: blur(8px); display: flex; justify-content: space-between; align-items: center; }
         .glass-select-box:hover { border-color: #38bdf8; background: rgba(0, 0, 0, 0.5); box-shadow: 0 0 12px rgba(56, 189, 248, 0.2); }
         .select-icon { font-size: 0.8rem; color: #ffffff; }
         
         /* 4. बटन्स: प्राइमरी (ब्लू), सक्सेस (ग्रीन), सेकेंडरी (ग्रे) */
-        .btn { width: 100%; background: linear-gradient(135deg, #3b82f6, #2563eb); color: #ffffff; border: none; padding: 15px; border-radius: 12px; font-size: 1rem; font-weight: 600; letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35); }
+        .btn { width: 100%; background: linear-gradient(135deg, #3b82f6, #2563eb); color: #ffffff; border: none; padding: 15px; border-radius: 12px; font-size: 1rem; font-weight: 600; letter-spacing: 0.5px; cursor: pointer; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35); }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5); filter: brightness(1.1); }
         .btn:active { transform: scale(0.92); box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3); }
 
@@ -48,7 +53,7 @@
         .question-text { font-size: 1.15rem; font-weight: 500; margin-top: 45px; margin-bottom: 25px; clear: both; line-height: 1.7; color: #ffffff; }
         
         /* 5. क्विज़ ऑप्शंस: ट्रांसपेरेंट डार्क -> सेलेक्ट होने पर ब्लू */
-        .option-item { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); padding: 15px 18px; border-radius: 12px; margin-bottom: 14px; cursor: pointer; font-size: 1rem; color: #ffffff; transition: all 0.3s ease; backdrop-filter: blur(8px); }
+        .option-item { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1); padding: 15px 18px; border-radius: 12px; margin-bottom: 14px; cursor: pointer; font-size: 1rem; color: #ffffff; backdrop-filter: blur(8px); }
         .option-item:hover { background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; transform: translateX(5px); }
         
         .option-item.selected { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); font-weight: 600; color: #ffffff; transform: scale(1.01); }
@@ -70,6 +75,9 @@
         .options-glass { padding: 25px !important; max-height: 80vh; }
         .options-list { overflow-y: auto; max-height: 55vh; text-align: left; padding-right: 8px; margin-bottom: 15px; }
         
+        /* खाली लिस्ट का मेसेज */
+        .empty-msg { text-align: center; color: #ffffff; padding: 20px; }
+
         /* स्क्रॉलबार */
         .options-list::-webkit-scrollbar { width: 5px; }
         .options-list::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
@@ -77,7 +85,7 @@
         .options-list::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.6); }
         
         /* लिस्ट ऑप्शन कार्ड्स (मोडल के अंदर) */
-        .option-card { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); padding: 14px 18px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; font-size: 0.95rem; color: #ffffff; transition: all 0.25s ease; }
+        .option-card { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); padding: 14px 18px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; font-size: 0.95rem; color: #ffffff; }
         .option-card:hover { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: #ffffff; transform: translateX(5px); }
         
         .modal-icon { font-size: 2.8rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)); }
@@ -90,27 +98,50 @@
         .spinner { width: 45px; height: 45px; border: 4px solid rgba(255, 255, 255, 0.1); border-top-color: #38bdf8; border-radius: 50%; margin: 0 auto 20px auto; animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ========================================================= */
-        /* न्यू अपडेट: RAINBOW CLASSES टॉप सेंटर बैज (एनवेलप स्टाइल) */
-        /* ========================================================= */
+        /* RAINBOW CLASSES टॉप सेंटर बैज (एनवेलप स्टाइल) */
         .card::before, .modal-glass::before {
-            content: "RAINBOW CLASSES";
-            position: absolute;
-            top: -12px; /* कार्ड के ऊपरी बॉर्डर पर आधा बाहर, आधा अंदर */
-            left: 50%;
-            transform: translateX(-50%);
-            background: #0f172a; /* पीछे का डार्क बैकग्राउंड जिससे कार्ड की लाइन न दिखे */
-            color: #38bdf8; /* थीम से मिलता हुआ हल्का नीला रंग */
-            font-size: 0.65rem; /* छोटे अक्षर */
-            font-weight: 700;
-            letter-spacing: 1px;
-            padding: 4px 14px;
-            border: 1px solid rgba(56, 189, 248, 0.5); /* थिकनेस वाली लाइन चारों ओर */
-            border-radius: 6px; /* कॉर्नर थोड़ा सा मुड़ा हुआ (गोल टाइप का) */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-            white-space: nowrap;
-            z-index: 100;
+            content: "RAINBOW CLASSES"; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            background: #0f172a; color: #38bdf8; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px;
+            padding: 4px 14px; border: 1px solid rgba(56, 189, 248, 0.5); border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); white-space: nowrap; z-index: 100;
         }
+
+        /* ========================================================= */
+        /* लाइट-मोड CSS ओवरराइड्स (हल्का वाइट/ग्रे कॉम्बिनेशन + 100% ब्लैक टेक्स्ट फिक्स) */
+        /* ========================================================= */
+        body.light-mode { background: linear-gradient(135deg, #e2e8f0 0%, #f8fafc 100%); color: #0f172a; }
+        .light-mode .card, .light-mode .modal-glass { background: rgba(255, 255, 255, 0.95) !important; border-color: rgba(0, 0, 0, 0.1); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1); }
+        
+        /* मोडल, पॉपअप और कार्ड के सभी टेक्स्ट को ज़बरदस्ती डार्क (Black/Grey) करने की कमांड */
+        .light-mode .input-group label, .light-mode .question-text, .light-mode #res-name, 
+        .light-mode #res-id-display, .light-mode .modal-glass p, .light-mode .modal-glass span, 
+        .light-mode #q-counter, .light-mode #options-title, .light-mode .empty-msg { 
+            color: #0f172a !important; 
+        }
+
+        .light-mode h2 { color: #2563eb !important; }
+        
+        /* लाइट मोड में स्कोर के रंग को बेहतर विजिबिलिटी के लिए थोड़ा डार्क किया गया है */
+        .light-mode .score-badge { color: #ea580c !important; text-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .light-mode #res-percent { color: #059669 !important; }
+
+        .light-mode .input-group input, .light-mode .glass-select-box { background: rgba(255, 255, 255, 0.6); border-color: rgba(0, 0, 0, 0.15); color: #0f172a; }
+        .light-mode .input-group input:focus, .light-mode .glass-select-box:hover { border-color: #2563eb; background: rgba(255, 255, 255, 0.9); box-shadow: 0 0 12px rgba(37, 99, 235, 0.2); }
+        .light-mode .input-group input::placeholder { color: rgba(0, 0, 0, 0.5); }
+        .light-mode .select-icon { color: #0f172a; }
+        .light-mode .option-item, .light-mode .option-card { background: rgba(255, 255, 255, 0.7); border-color: rgba(0, 0, 0, 0.15); color: #0f172a; }
+        .light-mode .option-item:hover, .light-mode .option-card:hover { background: rgba(37, 99, 235, 0.1); border-color: #2563eb; }
+        .light-mode .option-item.selected { background: rgba(37, 99, 235, 0.2); border-color: #2563eb; font-weight: 600; color: #0f172a; box-shadow: 0 0 12px rgba(37, 99, 235, 0.2); }
+        .light-mode .card::before, .light-mode .modal-glass::before { background: #e2e8f0; color: #2563eb; border-color: rgba(37, 99, 235, 0.3); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); }
+
+        /* थीम चयन के पॉपअप के लिए CSS (बिना ब्लर के, कार्ड के अंदर फिक्स्ड) */
+        .theme-popup-box { position: absolute; top: 100%; left: 0; width: 100%; margin-top: 8px; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 12px; display: flex; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 50; }
+        .light-mode .theme-popup-box { background: rgba(255, 255, 255, 0.95); border-color: rgba(0,0,0,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .theme-opt { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; }
+        .light-opt { background: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; }
+        .dark-opt { background: #0f172a; color: #f8fafc; border: 1px solid #334155; }
+        .light-opt:hover { background: #e2e8f0; }
+        .dark-opt:hover { border-color: #38bdf8; }
     </style>
 </head>
 <body>
@@ -129,6 +160,18 @@
                 <input type="text" id="student-id" placeholder="ex-'cm1217'">
             </div>
             <button class="btn" onclick="verifyStudent()">Next</button>
+            
+            <!-- थीम (Screen Mode) बटन (Next बटन के ठीक नीचे, केवल शुरुआती सेटअप के लिए) -->
+            <div style="position: relative; margin-top: 15px;">
+                <button class="btn btn-secondary" style="display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="toggleThemeMenu()">
+                    🎨 Screen Mode
+                </button>
+                <!-- डार्क/लाइट पॉपअप -->
+                <div id="theme-popup" class="theme-popup-box hidden">
+                     <button class="theme-opt light-opt" onclick="setTheme('light')">☀️ Light</button>
+                     <button class="theme-opt dark-opt" onclick="setTheme('dark')">🌙 Dark</button>
+                </div>
+            </div>
         </div>
 
         <div id="selection-screen" class="card hidden">
@@ -179,8 +222,8 @@
 
         <div id="result-screen" class="card score-card hidden">
             <h2 style="color: #38bdf8; font-size: 1.6rem; letter-spacing: 0.5px;">🧾Your Result🫣</h2>
-            <p id="res-name" style="margin-top: 15px; color: #ffffff; font-weight: 500; font-size: 1.15rem;"></p>
-            <p id="res-id-display" style="color: #ffffff; font-size: 0.95rem; margin-top: 5px;"></p>
+            <p id="res-name" style="margin-top: 15px; font-weight: 500; font-size: 1.15rem;"></p>
+            <p id="res-id-display" style="font-size: 0.95rem; margin-top: 5px;"></p>
             <div class="score-badge" id="res-score">0 / 0</div>
             <!-- रिजल्ट परसेंट सक्सेस (हरा) कलर में -->
             <p id="res-percent" style="font-size: 1.3rem; font-weight: 600; color: #10b981;"></p>
@@ -209,11 +252,11 @@
         </div>
     </div>
 
-    <!-- Dynamic Loading UI Spinner -->
+    <!-- Dynamic Loading UI Spinner (इनलाइन कलर्स हटाए गए) -->
     <div id="loading-overlay" class="modal-overlay hidden" style="z-index: 2000;">
-        <div class="modal-glass" style="text-align: center; padding: 45px 30px; background: rgba(30, 40, 50, 0.95);">
+        <div class="modal-glass" style="text-align: center; padding: 45px 30px;">
             <div class="spinner"></div>
-            <p style="color: #ffffff; font-size: 1.15rem; margin-bottom: 0; font-weight: 500;">कृपया प्रतीक्षा करें,<br><span style="font-size:0.9rem; color:#ffffff; font-weight: 400; display: inline-block; margin-top: 8px;">सवाल सर्वर से लोड हो रहे हैं...</span></p>
+            <p style="font-size: 1.15rem; margin-bottom: 0; font-weight: 500;">कृपया प्रतीक्षा करें,<br><span style="font-size:0.9rem; font-weight: 400; display: inline-block; margin-top: 8px;">सवाल सर्वर से लोड हो रहे हैं...</span></p>
         </div>
     </div>
 
@@ -221,6 +264,26 @@
     <script src="studentid.js"></script>
 
     <script>
+        // Themes (डार्क और लाइट मोड का लॉजिक)
+        function toggleThemeMenu() {
+            const popup = document.getElementById('theme-popup');
+            if (popup.classList.contains('hidden')) {
+                popup.classList.remove('hidden');
+            } else {
+                popup.classList.add('hidden');
+            }
+        }
+
+        function setTheme(mode) {
+            if (mode === 'light') {
+                document.body.classList.add('light-mode');
+            } else {
+                document.body.classList.remove('light-mode');
+            }
+            // थीम चुनने के बाद पॉपअप बंद कर दें
+            toggleThemeMenu();
+        }
+
         // Subjects & Chapters List (UI के लिए स्थिर डेटा)
         const subjectsList = {
             1: "भौतिक विज्ञान (Physics)",
@@ -453,7 +516,8 @@
             }
 
             if (!hasQuizzes) {
-                list.innerHTML = `<div style="text-align:center; color:#ffffff; padding: 20px;">अभी इस अध्याय में कोई SET नहीं डाला गया है।<br><br>कृपया बाद में प्रयास करें।</div>`;
+                // (FIX) - यहाँ से इनलाइन वाइट कलर हटाकर CSS क्लास 'empty-msg' सेट कर दी है
+                list.innerHTML = `<div class="empty-msg">अभी इस अध्याय में कोई SET नहीं डाला गया है।<br><br>कृपया बाद में प्रयास करें।</div>`;
             }
 
             document.getElementById("options-modal").classList.remove("hidden");
