@@ -2,5 +2,6 @@
 window.validStudentIDs = [
     "Cm2007", 
     "Omi2009", 
-    "pk2010"
+    "pk2010",
+    "skroy"
 ];
