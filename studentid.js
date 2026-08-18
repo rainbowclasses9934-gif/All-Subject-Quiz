@@ -3,5 +3,6 @@ window.validStudentIDs = [
     "Cm2007", 
     "Omi2009", 
     "pk2010",
+    "234051190003",
     "skroy"
 ];
